@@ -9,8 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-import static org.springframework.http.HttpStatus.NOT_FOUND;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @RequestMapping("/companies")
@@ -25,6 +24,7 @@ public class CompanyController {
     }
 
     @PostMapping(produces = {"application/json"})
+    @ResponseStatus(code = CREATED)
     public Company add(@RequestBody Company company) {
         return repository.save(company);
     }
