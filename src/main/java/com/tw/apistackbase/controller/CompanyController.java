@@ -51,4 +51,9 @@ public class CompanyController {
         }
         return new ResponseEntity<>(NOT_FOUND);
     }
+
+    @GetMapping(path="/{name}",produces = {"application/json"})
+    public Company getCompanyByName(@PathVariable String name) {
+        return repository.findOneByName(name);
+    }
 }
