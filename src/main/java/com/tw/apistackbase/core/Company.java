@@ -1,9 +1,6 @@
 package com.tw.apistackbase.core;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Company {
@@ -12,6 +9,9 @@ public class Company {
     private Long id;
 
     private String name;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private CompanyProfile profile;
 
     public Long getId() {
         return id;
@@ -34,5 +34,13 @@ public class Company {
 
     public Company(String name) {
         this.name = name;
+    }
+
+    public CompanyProfile getProfile() {
+        return profile;
+    }
+
+    public void setProfile(CompanyProfile profile) {
+        this.profile = profile;
     }
 }
