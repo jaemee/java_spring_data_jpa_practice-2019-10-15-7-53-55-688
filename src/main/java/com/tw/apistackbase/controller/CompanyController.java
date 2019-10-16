@@ -39,4 +39,9 @@ public class CompanyController {
             return new ResponseEntity<>(NOT_FOUND);
         }
     }
+
+    @PutMapping(produces = {"application/json"})
+    public Company update(@RequestBody Company company) {
+        return repository.save(company);
+    }
 }
