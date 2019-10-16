@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -41,7 +42,13 @@ public class CompanyController {
     }
 
     @PutMapping(produces = {"application/json"})
-    public Company update(@RequestBody Company company) {
-        return repository.save(company);
+    public ResponseEntity update(@RequestBody Company company) {
+        Company companyRecord = repository.getOne(company.getId());
+        List<Company> companies = repository.findAll();
+        if(companies.contains(companyRecord)) {
+            repository.save(company);
+            return new ResponseEntity<>(company, OK);
+        }
+        return new ResponseEntity<>(NOT_FOUND);
     }
 }
