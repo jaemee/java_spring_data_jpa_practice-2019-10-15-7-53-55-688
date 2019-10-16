@@ -34,7 +34,7 @@ public class CompanyController {
 
         if (optionalCompany.isPresent()) {
             repository.delete(optionalCompany.get());
-            return new ResponseEntity<>(OK);
+            return new ResponseEntity<>(optionalCompany.get(), OK);
         } else {
             return new ResponseEntity<>(NOT_FOUND);
         }
