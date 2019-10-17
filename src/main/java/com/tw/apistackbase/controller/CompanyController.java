@@ -1,7 +1,7 @@
 package com.tw.apistackbase.controller;
 
 import com.tw.apistackbase.core.Company;
-import com.tw.apistackbase.repository.CompanyRepository;
+import com.tw.apistackbase.service.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -18,26 +18,26 @@ import static org.springframework.http.HttpStatus.*;
 public class CompanyController {
 
     @Autowired
-    private CompanyRepository repository;
+    private CompanyService companyService;
 
     @GetMapping(path = "/all", produces = {"application/json"})
     public Iterable<Company> list(@RequestParam(required = false, defaultValue = "1") int page,
                                   @RequestParam(required = false,defaultValue = "5") int pageSize) {
-        return repository.findAll(PageRequest.of(page-1,pageSize, Sort.by("name").ascending()));
+        return companyService.findAll(page,pageSize);
     }
 
     @PostMapping(produces = {"application/json"})
     @ResponseStatus(code = CREATED)
     public Company add(@RequestBody Company company) {
-        return repository.save(company);
+        return companyService.save(company);
     }
 
     @DeleteMapping(produces = {"application/json"})
     public ResponseEntity delete(@RequestBody Company company) {
-        Optional<Company> optionalCompany = repository.findById(company.getId());
+        Optional<Company> optionalCompany = companyService.findById(company.getId());
 
         if (optionalCompany.isPresent()) {
-            repository.delete(optionalCompany.get());
+            companyService.delete(optionalCompany.get());
             return new ResponseEntity<>(optionalCompany.get(), OK);
         } else {
             return new ResponseEntity<>(NOT_FOUND);
@@ -46,10 +46,10 @@ public class CompanyController {
 
     @PutMapping(produces = {"application/json"})
     public ResponseEntity update(@RequestBody Company company) {
-        Company companyRecord = repository.getOne(company.getId());
-        List<Company> companies = repository.findAll();
+        Company companyRecord = companyService.getOne(company.getId());
+        List<Company> companies = companyService.findAll();
         if(companies.contains(companyRecord)) {
-            repository.save(company);
+            companyService.save(company);
             return new ResponseEntity<>(company, OK);
         }
         return new ResponseEntity<>(NOT_FOUND);
@@ -57,6 +57,6 @@ public class CompanyController {
 
     @GetMapping(produces = {"application/json"})
     public Company getCompanyByName(@RequestParam(required = false,defaultValue = "") String name) {
-        return repository.findByNameContaining(name);
+        return companyService.findByNameContaining(name);
     }
 }
