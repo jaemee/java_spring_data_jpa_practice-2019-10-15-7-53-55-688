@@ -3,12 +3,9 @@ package com.tw.apistackbase.controller;
 import com.tw.apistackbase.core.Company;
 import com.tw.apistackbase.service.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 
 import static org.springframework.http.HttpStatus.*;
@@ -22,8 +19,8 @@ public class CompanyController {
 
     @GetMapping(path = "/all", produces = {"application/json"})
     public Iterable<Company> list(@RequestParam(required = false, defaultValue = "1") int page,
-                                  @RequestParam(required = false,defaultValue = "5") int pageSize) {
-        return companyService.findAll(page,pageSize);
+                                  @RequestParam(required = false, defaultValue = "5") int pageSize) {
+        return companyService.findAll(page, pageSize);
     }
 
     @PostMapping(produces = {"application/json"})
@@ -34,15 +31,14 @@ public class CompanyController {
 
     @DeleteMapping(produces = {"application/json"})
     public ResponseEntity delete(@RequestBody Company company) {
-        Optional<Company> optionalCompany = companyService.findById(company.getId());
 
-        if (optionalCompany.isPresent()) {
-            companyService.delete(optionalCompany.get());
+        Optional<Company> optionalCompany = companyService.delete(company);
+        if(optionalCompany.isPresent()){
             return new ResponseEntity<>(optionalCompany.get(), OK);
-        } else {
-            return new ResponseEntity<>(NOT_FOUND);
         }
-    }
+            return new ResponseEntity<>(NOT_FOUND);
+
+}
 
     @PutMapping(produces = {"application/json"})
     public ResponseEntity update(@RequestBody Company company) {

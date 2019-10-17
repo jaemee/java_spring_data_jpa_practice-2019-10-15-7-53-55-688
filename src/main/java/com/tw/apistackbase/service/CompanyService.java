@@ -7,10 +7,16 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class CompanyService {
-    @Autowired
+
     private CompanyRepository companyRepository;
+
+    public CompanyService(CompanyRepository companyRepository) {
+        this.companyRepository = companyRepository;
+    }
 
     public Iterable<Company> findAll(int page, int pageSize) {
         return companyRepository.findAll(PageRequest.of(page-1,pageSize, Sort.by("name").ascending()));
@@ -18,5 +24,11 @@ public class CompanyService {
 
     public Company save(Company company) {
         return companyRepository.save(company);
+    }
+
+    public Optional<Company> delete(Company company) {
+        Optional<Company> optionalCompany = companyRepository.findById(company.getId());
+        optionalCompany.ifPresent(value -> companyRepository.delete(value));
+        return optionalCompany;
     }
 }
