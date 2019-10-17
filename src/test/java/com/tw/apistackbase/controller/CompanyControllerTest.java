@@ -68,7 +68,7 @@ class CompanyControllerTest {
         when(companyService.isUpdated(any())).thenReturn(true);
         ResultActions result = mvc.perform(put("/companies")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(company)));
+                .content(objectMapper.writeValueAsString(new Company())));
         result.andExpect(status().isOk());
     }
 
@@ -96,6 +96,18 @@ class CompanyControllerTest {
         company.setId(3L);
         when(companyService.delete(any())).thenReturn(Optional.of(company));
         ResultActions result = mvc.perform(delete("/companies")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(company)));
+        result.andExpect(status().isOk());
+    }
+
+    @Test
+    void should_get_company_by_name() throws Exception {
+        company = new Company();
+        company.setId(3L);
+        company.setName("ACompany");
+        when(companyService.findByNameContaining(any())).thenReturn(company);
+        ResultActions result = mvc.perform(get("/companies")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(company)));
         result.andExpect(status().isOk());
