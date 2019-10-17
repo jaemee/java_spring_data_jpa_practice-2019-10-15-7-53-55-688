@@ -18,7 +18,7 @@ public class CompanyController {
     @Autowired
     private CompanyRepository repository;
 
-    @GetMapping(produces = {"application/json"})
+    @GetMapping(path = "/all", produces = {"application/json"})
     public Iterable<Company> list() {
         return repository.findAll();
     }
@@ -52,8 +52,8 @@ public class CompanyController {
         return new ResponseEntity<>(NOT_FOUND);
     }
 
-    @GetMapping(path="/{name}",produces = {"application/json"})
-    public Company getCompanyByName(@PathVariable String name) {
-        return repository.findOneByName(name);
+    @GetMapping(produces = {"application/json"})
+    public Company getCompanyByName(@RequestParam(required = false) String name) {
+        return repository.findByNameContaining(name);
     }
 }
