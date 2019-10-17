@@ -71,4 +71,14 @@ class CompanyControllerTest {
                 .content(objectMapper.writeValueAsString(company)));
         result.andExpect(status().isOk());
     }
+
+    @Test
+    void should_return_not_found_when_company_is_invalid() throws Exception {
+        when(companyService.isUpdated(any())).thenReturn(false);
+        ResultActions result = mvc.perform(put("/companies")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(new Company())));
+        result.andExpect(status().isNotFound());
+    }
+
 }
