@@ -43,4 +43,8 @@ public class CompanyService {
         }
         return false;
     }
+
+    public Company findByNameContaining(String name) {
+        return companyRepository.findByNameContaining(name);
+    }
 }
