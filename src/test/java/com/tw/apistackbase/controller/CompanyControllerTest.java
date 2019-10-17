@@ -81,4 +81,23 @@ class CompanyControllerTest {
         result.andExpect(status().isNotFound());
     }
 
+    @Test
+    void should_return_not_found_when_deleting_invalid_company() throws Exception {
+
+        ResultActions result = mvc.perform(delete("/companies")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(new Company())));
+        result.andExpect(status().isNotFound());
+    }
+
+    @Test
+    void should_return_ok_when_deleting_invalid_company() throws Exception {
+        company = new Company();
+        company.setId(3L);
+        when(companyService.delete(any())).thenReturn(Optional.of(company));
+        ResultActions result = mvc.perform(delete("/companies")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(company)));
+        result.andExpect(status().isOk());
+    }
 }
