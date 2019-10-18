@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import javax.persistence.NonUniqueResultException;
+
 @ControllerAdvice
 public class ControllerExceptionHandler {
 
@@ -16,6 +18,16 @@ public class ControllerExceptionHandler {
     public ResponseError notFoundException(NotFoundException exception){
         ResponseError error = new ResponseError();
         error.setCode(404);
+        error.setMessage(exception.getMessage());
+        return error;
+    }
+
+    @ResponseBody
+    @ExceptionHandler(NonUniqueResultException.class)
+    @ResponseStatus(code = HttpStatus.NOT_FOUND)
+    public ResponseError nonUniqueException(NonUniqueResultException exception){
+        ResponseError error = new ResponseError();
+        error.setCode(500);
         error.setMessage(exception.getMessage());
         return error;
     }

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.NonUniqueResultException;
 import java.util.Optional;
 
 import static org.springframework.http.HttpStatus.*;
@@ -52,6 +53,10 @@ public class CompanyController {
 
     @GetMapping(produces = {"application/json"})
     public Company getCompanyByName(@RequestParam(required = false,defaultValue = "") String name) {
-        return companyService.findByNameContaining(name);
+        try {
+            return companyService.findByNameContaining(name);
+        }catch (Exception e){
+            throw new NonUniqueResultException("Search returns more than 1 result");
+        }
     }
 }
