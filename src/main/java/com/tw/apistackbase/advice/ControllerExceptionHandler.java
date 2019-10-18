@@ -13,7 +13,10 @@ public class ControllerExceptionHandler {
     @ResponseBody
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(code = HttpStatus.NOT_FOUND)
-    public String notFoundException(NotFoundException exception){
-        return exception.getMessage();
+    public ResponseError notFoundException(NotFoundException exception){
+        ResponseError error = new ResponseError();
+        error.setCode(404);
+        error.setMessage(exception.getMessage());
+        return error;
     }
 }
