@@ -15,6 +15,7 @@ import static org.springframework.http.HttpStatus.*;
 @RequestMapping("/companies")
 public class CompanyController {
 
+    private static final String COMPANY_NOT_FOUND = "Company not found";
     @Autowired
     private CompanyService companyService;
 
@@ -37,16 +38,16 @@ public class CompanyController {
         if(optionalCompany.isPresent()){
             return new ResponseEntity<>(optionalCompany.get(), OK);
         }
-        throw new NotFoundException("Company not found");
+        throw new NotFoundException(COMPANY_NOT_FOUND);
 
 }
 
     @PutMapping(produces = {"application/json"})
-    public ResponseEntity update(@RequestBody Company company) {
+    public ResponseEntity update(@RequestBody Company company) throws NotFoundException {
         if(companyService.isUpdated(company)) {
             return new ResponseEntity<>(company, OK);
         }
-        return new ResponseEntity<>(NOT_FOUND);
+        throw new NotFoundException(COMPANY_NOT_FOUND);
     }
 
     @GetMapping(produces = {"application/json"})
